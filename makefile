@@ -1,8 +1,8 @@
 all:
-	ghc -threaded ./project.hs && ./project && timidity ./test2.midi
+	ghc -threaded ./Main.hs && ./Main && timidity ./test.midi
 
 clean:
-	rm ./project || true
+	rm ./Main || true
 	rm *.midi || true
 	rm *.hi || true
 	rm *.o || true
