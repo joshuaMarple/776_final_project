@@ -22,3 +22,14 @@ augmentedMajorSeventh x = chord [x, transpose 4 x, transpose 8 x, transpose 11 x
 diminishedSeventh :: Music a -> Music a
 diminishedSeventh x = chord [x, transpose 3 x, transpose 6 x, transpose 9 x]
 
+majorProg :: Music a -> Music a
+majorProg x = line [x, transpose 4 x, transpose 7 x]
+
+minorProg :: Music a -> Music a
+minorProg x = line [x, transpose 3 x, transpose 7 x]
+
+majorComp :: Music a -> Music a -> Music a
+majorComp x y = majorTriad y :=: majorProg x
+
+minorComp :: Music a -> Music a -> Music a
+minorComp x y = minorTriad y :=: minorProg x

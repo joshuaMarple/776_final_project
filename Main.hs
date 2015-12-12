@@ -16,13 +16,14 @@ c_progList = [("Dm", ["G",  "Em", "C"]),
               ("C",  ["Dm", "G", "Em", "Am", "F"])]
               
 
-note_len = qn
-c_chordInterpList = [("Dm", minorTriad (d 4 note_len)),
-                     ("G",  majorTriad (g 4 note_len)),
-                     ("Em", minorTriad (e 4 note_len)),
-                     ("Am", minorTriad (a 4 note_len)),
-                     ("F",  majorTriad (f 4 note_len)),
-                     ("C",  majorTriad (c 4 note_len))]
+note_len = en
+l_note_len = dqn
+c_chordInterpList = [("Dm", minorComp (d 4 note_len) (d 3 l_note_len)),
+                     ("G",  majorComp (g 4 note_len) (g 3 l_note_len)),
+                     ("Em", minorComp (e 4 note_len) (e 3 l_note_len)),
+                     ("Am", minorComp (a 4 note_len) (a 3 l_note_len)),
+                     ("F",  majorComp (f 4 note_len) (f 3 l_note_len)),
+                     ("C",  majorComp (c 4 note_len) (c 3 l_note_len))]
 
 chordInterp = Map.fromList c_chordInterpList
 
