@@ -15,12 +15,14 @@ c_progList = [("Dm", ["G",  "Em", "C"]),
               ("F",  ["Dm", "G", "C"]), 
               ("C",  ["Dm", "G", "Em", "Am", "F"])]
               
-c_chordInterpList = [("Dm", minorTriad (d 4 wn)),
-                     ("G",  majorTriad (g 4 wn)),
-                     ("Em", minorTriad (e 4 wn)),
-                     ("Am", minorTriad (a 4 wn)),
-                     ("F",  majorTriad (f 4 wn)),
-                     ("C",  majorTriad (c 4 wn))]
+
+note_len = qn
+c_chordInterpList = [("Dm", minorTriad (d 4 note_len)),
+                     ("G",  majorTriad (g 4 note_len)),
+                     ("Em", minorTriad (e 4 note_len)),
+                     ("Am", minorTriad (a 4 note_len)),
+                     ("F",  majorTriad (f 4 note_len)),
+                     ("C",  majorTriad (c 4 note_len))]
 
 chordInterp = Map.fromList c_chordInterpList
 
@@ -32,15 +34,15 @@ numKeys = length c_progKeys
 genStart :: IO ()
 genStart = do
     x <- runRVar (choice c_progKeys) DevRandom
-    genSequence x (line [])
+    genSequence x (line []) 25
 
-genSequence :: String -> Music Pitch -> IO ()
-genSequence x y = do 
+genSequence :: String -> Music Pitch -> Int -> IO ()
+genSequence x y cur_len = do 
     next <- runRVar (choice (c_progMap Map.! x)) DevRandom
 
-    if x == "C"
-        then writeMidi "test.midi" y
-        else genSequence next (y :+: (chordInterp Map.! x))
+    if ((x == "C") && (cur_len <= 0))
+        then writeMidi "test.midi" (y :+: (chordInterp Map.! x))
+        else genSequence next (y :+: (chordInterp Map.! x)) (cur_len - 1)
               
 
 la = line (map fn [(d, 3), (e, 3), (f, 3), (a, 3), (c, 4), (e, 4)]) where fn (n1, oc) = n1 oc sn
