@@ -7,6 +7,12 @@ majorTriad x = chord [x, transpose 4 x, transpose 7 x]
 minorTriad :: Music a -> Music a
 minorTriad x = chord [x, transpose 3 x, transpose 7 x]
 
+majorTriadList :: Music a -> [Music a]
+majorTriadList x = [x, transpose 4 x, transpose 7 x]
+
+minorTriadList :: Music a -> [Music a]
+minorTriadList x = [x, transpose 3 x, transpose 7 x]
+
 augmentedTriad:: Music a -> Music a
 augmentedTriad x = chord [x, transpose 3 x, transpose 8 x]
 

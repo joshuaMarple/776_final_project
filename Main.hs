@@ -1,6 +1,7 @@
 import Euterpea
 import qualified Data.Map as Map
 import Chords
+import Melody
 import System.Random
 import Data.Random
 import Data.Random.Extras 
@@ -14,16 +15,30 @@ c_progList = [("Dm", ["G",  "Em", "C"]),
               ("Am", ["F",  "Dm"]),
               ("F",  ["Dm", "G", "C"]), 
               ("C",  ["Dm", "G", "Em", "Am", "F"])]
+
+c_mima = Map.fromList [("Dm", (d, "minor")),
+              ("G", (g, "major")),
+              ("Em", (e, "minor")), 
+              ("Am", (a, "minor")),
+              ("F", (f, "major")), 
+              ("C", (c, "major"))]
               
 
 note_len = en
 l_note_len = dqn
-c_chordInterpList = [("Dm", minorComp (d 4 note_len) (d 3 l_note_len)),
-                     ("G",  majorComp (g 4 note_len) (g 3 l_note_len)),
-                     ("Em", minorComp (e 4 note_len) (e 3 l_note_len)),
-                     ("Am", minorComp (a 4 note_len) (a 3 l_note_len)),
-                     ("F",  majorComp (f 4 note_len) (f 3 l_note_len)),
-                     ("C",  majorComp (c 4 note_len) (c 3 l_note_len))]
+-- c_chordInterpList = [("Dm", minorComp (d 4 note_len) (d 3 l_note_len)),
+--                      ("G",  majorComp (g 4 note_len) (g 3 l_note_len)),
+--                      ("Em", minorComp (e 4 note_len) (e 3 l_note_len)),
+--                      ("Am", minorComp (a 4 note_len) (a 3 l_note_len)),
+--                      ("F",  majorComp (f 4 note_len) (f 3 l_note_len)),
+--                      ("C",  majorComp (c 4 note_len) (c 3 l_note_len))]
+
+c_chordInterpList = [("Dm", minorTriad (d 3 l_note_len)),
+                     ("G",  majorTriad (g 3 l_note_len)),
+                     ("Em", minorTriad (e 3 l_note_len)),
+                     ("Am", minorTriad (a 3 l_note_len)),
+                     ("F",  majorTriad (f 3 l_note_len)),
+                     ("C",  majorTriad (c 3 l_note_len))]
 
 chordInterp = Map.fromList c_chordInterpList
 
@@ -35,15 +50,17 @@ numKeys = length c_progKeys
 genStart :: IO ()
 genStart = do
     x <- runRVar (choice c_progKeys) DevRandom
-    genSequence x (line []) 25
+    genSequence x (line []) 5
 
 genSequence :: String -> Music Pitch -> Int -> IO ()
 genSequence x y cur_len = do 
     next <- runRVar (choice (c_progMap Map.! x)) DevRandom
+    let val = c_mima Map.! x
+    mel  <- melody (fst val) (snd val)
 
     if ((x == "C") && (cur_len <= 0))
-        then writeMidi "test.midi" (y :+: (chordInterp Map.! x))
-        else genSequence next (y :+: (chordInterp Map.! x)) (cur_len - 1)
+        then writeMidi "test.midi" (y :+: (majorTriad (c 3 l_note_len) :=: majorTriad (c 4 l_note_len)))
+        else genSequence next (y :+: (chordInterp Map.! x :=: mel)) (cur_len - 1)
               
 
 la = line (map fn [(d, 3), (e, 3), (f, 3), (a, 3), (c, 4), (e, 4)]) where fn (n1, oc) = n1 oc sn
