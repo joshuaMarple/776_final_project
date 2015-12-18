@@ -36,12 +36,13 @@ c_mima = Map.fromList [("Dm", (d, "minor")),
               ("F", (f, "major")),
               ("C", (c, "major"))]
 
-mima = Map.fromList [(2, (d, "m1nor")),
-                (5, (g, "major")),
-                (3, (e, "minor")),
-                (6, (a, "minor")),
-                (4, (f, "major")),
-                (1, (c, "major"))]
+
+mima = Map.fromList [(2, ((\ x y -> transpose 2 (rootKey x y)), "minor")),
+                (5, ((\x y -> transpose 5 (rootKey x y)), "major")),
+                (3, ((\x y -> transpose 3 (rootKey x y)), "minor")),
+                (6, ((\x y -> transpose 6 (rootKey x y)), "minor")),
+                (4, ((\x y -> transpose 4 (rootKey x y)), "major")),
+                (1, ((\x y -> transpose 1 (rootKey x y)), "major"))]
 
 shiftKey :: String -> Int -> String
 shiftKey "A" i = keyList !! ((shiftSet !! i) `mod` 7)
@@ -62,7 +63,7 @@ noteList = [a, b, c, d, e, f, g]
 
 note_len = en
 l_note_len = dqn
-rootKey = c
+rootKey = g
 
 c_chordInterpList = [("Dm", minorTriad (d 3 l_note_len)),
                      ("G",  majorTriad (g 3 l_note_len)),
